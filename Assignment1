@@ -1,0 +1,81 @@
+import random
+import matplotlib.pyplot as plt
+runcounter=[]                #Declaring a variable for the number of Run(active)
+Iterationsperruncounter=[]   #Declaring the Total of Number of Iterations(active)           
+Total=0                     
+
+for z in  range(1,6):         #For 5 repitions
+  runcounter.append(z)
+  Array=[]
+  for b in range (10000):     #Making of the array
+    Array.append(0)
+  Array[4999]=1
+
+  No_of_Iteration=0
+  No_of_Ones=0
+  IterationCounter=[]         #Declaring all variables for one iteration
+  OnesCounter=[]
+  lst=[]
+
+  Index=[]
+  for g in range (10000):     #Array for indexing
+    Index.append(g)
+
+  while(No_of_Ones<10000):    #Continuity condition
+
+    for h in range(10000):    #Extracting elements which are 1
+      if Array[h]==1:
+        lst.append(h)
+
+    for c in lst:    #Making neighbours 1 with probability 0.35
+      if(Array[c]==1):
+        d=random.random()
+        e=random.random()
+        if(d<=0.35):
+          Array[abs(c-1)]=1
+        if(e<=0.35):
+          Array[(c+1)%10000]=1
+     
+    swaptwo=random.sample(Index,10) #Swapping
+    for f in range(5):
+      (Array[swaptwo[f]],Array[swaptwo[f+5]])=(Array[swaptwo[f+5]],Array[swaptwo[f]])
+  
+    No_of_Ones=0
+
+    for i in range(10000):   #Counting number of 1's
+      if(Array[i]==1):
+        No_of_Ones+=1
+     
+    lst.clear() 
+    No_of_Iteration+=1      #Counting number of Iterations
+    IterationCounter.append(No_of_Iteration)#List for Axis
+    OnesCounter.append(No_of_Ones)#List for Axis
+  
+  Total+=No_of_Iteration
+  Iterationsperruncounter.append(No_of_Iteration)
+print(Total/5)              #Average of the number of Iterations
+
+plt.plot(runcounter,Iterationsperruncounter)
+plt.xlabel("Number of Iterations required")   #Plot of Iterations vs Run
+plt.ylabel("Number of Runs conducted")
+plt.show()
+
+plt.plot(IterationCounter,OnesCounter)        #Plot of Iterations vs Number of Ones.
+plt.xlabel("Number of Iterations")
+plt.ylabel("Number of Ones")
+plt.show()
+
+Derivative=[]                                 #Derivative Values.
+for y in range(0,len(OnesCounter)-1):
+  m=OnesCounter[y+1]-OnesCounter[y]
+  Derivative.append(m)
+
+Derivative_x_axis=[]
+
+for n in range(1,len(Derivative)+1):         #Iteration Number.
+  Derivative_x_axis.append(n)
+
+plt.plot(Derivative_x_axis,Derivative)      #Plot of Derivative per iteration.
+plt.xlabel("Iteration Number")
+plt.ylabel("Derivative")
+plt.show
