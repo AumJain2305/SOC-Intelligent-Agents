@@ -4,7 +4,7 @@ runcounter=[]                #Declaring a variable for the number of Run(active)
 Iterationsperruncounter=[]   #Declaring the Total of Number of Iterations(active)           
 Total=0                     
 
-for z in  range(1,6):         #For 5 repitions
+for z in  range(1,6):         #For 5 repetition
   runcounter.append(z)
   Array=[]
   for b in range (10000):     #Making of the array
