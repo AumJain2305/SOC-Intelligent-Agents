@@ -1,0 +1,2 @@
+Average=38.3
+Peak Value of Derivative=1257.5
