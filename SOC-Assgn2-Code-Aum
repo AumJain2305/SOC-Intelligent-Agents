@@ -1,0 +1,114 @@
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+
+Total=0
+Run_Counter=[]
+IterationperRun=[]
+
+for l in range (1,100):
+  Array=np.zeros([100, 150], dtype = int)         #Creating Array
+  Array[49,74]=1
+
+  No_of_Iterations=0
+  No_of_Ones=0
+  IterationCounter=[]         #Declaring Variables
+  OnesCounter=[]
+  Index=[]
+  lst=[]
+  Derivative=[]
+
+  for a in range(100):
+    for b in range(150):          #Indexing
+      Index.append([a,b])
+
+  while(No_of_Ones<15000):                               #while, lst clearing is pending
+    for c in range(100):            
+      for d in range(150):          #Extracting indexes with 1
+        if(Array[c, d] == 1):
+          lst.append([c,d])
+
+    for h in lst:
+      f=random.random()
+      g=random.random()
+      if (f<=0.25):
+          Array[(h[0]+1)%100,(h[1]+1)%150]=1
+          Array[ h[0],(h[1]+1)%150]=1
+          Array[(h[0]+1)%100, h[1]]=1
+          Array[abs(h[0]-1),abs(h[1]-1)]=1          #Making next door neighbours 1
+          Array[h[0],abs(h[1]-1)]=1
+          Array[abs(h[0]-1),h[1]]=1
+          Array[abs(h[0]-1),(h[1]+1)%150]=1
+          Array[(h[0]+1)%100,abs(h[1]-1)]=1
+      if (g<=0.08):
+          Array[(h[0]+2)%100,(h[1]+2)%150]=1
+          Array[ h[0],(h[1]+2)%150]=1
+          Array[(h[0]+2)%100, h[1]]=1
+          Array[abs(h[0]-2),abs(h[1]-2)]=1          #Second Door neighbours of (2,2) and (2,0) form
+          Array[h[0],abs(h[1]-2)]=1
+          Array[abs(h[0]-2),h[1]]=1
+          Array[abs(h[0]-2),(h[1]+2)%150]=1
+          Array[(h[0]+2)%100,abs(h[1]-2)]=1
+
+          Array[(h[0]+2)%100,abs(h[1]-1)]=1      
+          Array[abs(h[0]-2),abs(h[1]-1)]=1
+          Array[(h[0]+2)%100,(h[1]+1)%150]=1
+          Array[abs(h[0]-2),(h[1]+1)%150]=1          #Second Door neighbours of (2,1) form
+          Array[(h[0]+1)%100,abs(h[1]-2)]=1
+          Array[abs(h[0]-1),(h[1]+2)%150]=1
+          Array[(h[0]+1)%100,(h[1]+2)%150]=1
+          Array[abs(h[0]-1),abs(h[1]-2)]=1
+
+
+
+    swap8=random.sample(Index,16)
+    for i in range (8):                            #Swapping
+      (Array[swap8[i][0],swap8[i][1]],Array[swap8[i+8][0],swap8[i+8][1]])=(Array[swap8[i+8][0],swap8[i+8][1]],Array[swap8[i][0],swap8[i][1]])#Swapping
+
+    lst.clear
+    No_of_Ones=0
+
+    for j in Index:                               
+      if(Array[j[0],j[1]]==1):
+        No_of_Ones+=1                               #Counting 1's
+    No_of_Iterations+=1
+
+    IterationCounter.append(No_of_Iterations)     #Appending lists for axes
+    OnesCounter.append(No_of_Ones)
+
+  Total+=No_of_Iterations                         
+  Run_Counter.append(l)                           #Graph 3 variables      
+  IterationperRun.append(No_of_Iterations)
+
+print(Total/100)
+
+plt.plot(IterationCounter,OnesCounter)
+plt.xlabel("Iteration completed")             #Plotting Graph 1
+plt.ylabel("Number of Ones")
+plt.show()
+
+OnesCounter.insert(0,1)
+for k in range(1, len(OnesCounter)):
+  Derivative.append(OnesCounter[k]-OnesCounter[k-1])   #Increasing a value in Ones list and creating Derivative list
+
+plt.plot(IterationCounter, Derivative)
+plt.xlabel("Iterations completed")          #Plotting Graph 2
+plt.ylabel("Number of 1's added")
+plt.show()
+
+plt.plot(IterationperRun,Run_Counter)
+plt.xlabel("Run Number")                    #Graph 3
+plt.ylabel("Iteration per Run")
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
