@@ -1,12 +1,14 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+import scipy.signal
+
 
 Total=0
 Run_Counter=[]
 IterationperRun=[]
 
-for l in range (1,100):
+for l in range (1):
   Array=np.zeros([100, 150], dtype = int)         #Creating Array
   Array[49,74]=1
 
@@ -80,26 +82,29 @@ for l in range (1,100):
   Run_Counter.append(l)                           #Graph 3 variables      
   IterationperRun.append(No_of_Iterations)
 
-print(Total/100)
+print(Total/1)
 
 plt.plot(IterationCounter,OnesCounter)
 plt.xlabel("Iteration completed")             #Plotting Graph 1
 plt.ylabel("Number of Ones")
 plt.show()
 
-OnesCounter.insert(0,1)
-for k in range(1, len(OnesCounter)):
-  Derivative.append(OnesCounter[k]-OnesCounter[k-1])   #Increasing a value in Ones list and creating Derivative list
+Derivative=np.gradient(OnesCounter)
+yhat=scipy.signal.savgol_filter(Derivative,51,6, mode='constant')
+plt.plot(IterationCounter,yhat)
+   #Increasing a value in Ones list and creating Derivative list
 
-plt.plot(IterationCounter, Derivative)
+plt.plot(IterationCounter, Derivative, color='Red')
 plt.xlabel("Iterations completed")          #Plotting Graph 2
 plt.ylabel("Number of 1's added")
 plt.show()
 
-plt.plot(IterationperRun,Run_Counter)
+plt.plot(Run_Counter,IterationperRun)
 plt.xlabel("Run Number")                    #Graph 3
 plt.ylabel("Iteration per Run")
 plt.show()
+print(max(Derivative))
+
 
 
 
