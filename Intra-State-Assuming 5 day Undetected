@@ -1,0 +1,147 @@
+import numpy as np
+import random                                                                   #Importing Random Stuff
+from random import randint                                           
+
+Arrays = []
+Indices = []
+probability = []
+Hospital_guys=[]                                                                #Declaring Variables
+Infected_Here=[]
+No_of_Rows=[]
+No_of_Columns=[]
+No_of_Iterations=0
+Sick_Patients=0
+Extracted_Indices=[]
+Infected_Heres=[]
+Totalpopulation=0
+list_of_36=[]
+Dead_Patients=0 
+Unaffected_Patients=0                                                           #Creating a list from numbers till 35, starting from 0 for easy access
+for h in range(29):                                                              
+  list_of_36.append(h)
+
+No_of_Rows=[330, 230, 210, 370, 300, 300, 280, 250, 250, 200, 170, 140, 140, 140, 130, 180, 170, 170, 80, 60, 60, 50, 40, 30, 50, 40, 40, 20, 140]
+No_of_Columns=[500, 400, 400, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 120, 130, 120, 100, 100, 50, 50, 50, 50, 20, 30, 20, 30, 100]
+probability=[0.0828, 0.0365, 0.1102, 0.1029, 0.0236, 0.0555, 0.0201, 0.0319, 0.0308, 0.0303, 0.0269, 0.0707, 0.0859, 0.0414, 0.0397, 0.0556, 0.0189, 0.0573, 0.0189, 0.0123, 0.0350, 0.0132, 0.0122, 0.0119, 0.0394, 0.0017, 0.0052, 0.0056, 1]
+
+for a in range(29):                                                             #For a particular state, making Array and Index
+  Index_a=[]
+  #n = int(input())                                                              
+  #m = int(input())
+  #population_density_a = int(input())
+                                                                               
+  #probability_a = population_density_a/10000
+  #population_a = m*n                                                            
+  #Totalpopulation += population_a
+
+  Array_a = np.zeros([No_of_Rows[a], No_of_Columns[a]], dtype=int)              #Making array with all 0
+
+  for b in range(No_of_Rows[a]):
+    for c in range(No_of_Columns[a]):                                           #Indexing
+      Index_a.append([b,c])
+
+  random10 = random.sample(Index_a, 10)                                         #Choosing random 10 people in capital
+
+  for d in range(10):                                                           #Making 10 entries 1
+     Array_a[random10[d][0],random10[d][1]] = -1
+
+  Arrays.append(Array_a)                                                        #Adding my entries of each state to a bigger overall list.
+  Indices.append(Index_a)
+  #probability.append(probability_a)
+  #No_of_Rows.append(n)
+  #No_of_Columns.append(m)
+
+#No_of_Swaps = 5*Totalpopulation//10000                                         #50 swaps required per Day
+while(No_of_Iterations < 400):
+  if(No_of_Iterations < 5):                                                     #Defining number of days
+    for e in range (20000):                                                        #Replace 2 by number of swaps,i.e, 50.
+      two_numbers = random.sample(list_of_36,2)                                   
+      f=two_numbers[0]
+      g=two_numbers[0]
+      i=random.sample(Indices[f], 1)
+      j=random.sample(Indices[g], 1)
+      (Arrays[f][i[0][0], i[0][1]], Arrays[g][j[0][0], j[0][1]]) = (Arrays[g][j[0][0], j[0][1]], Arrays[f][i[0][0], i[0][1]] )   #Swapping for Inter-State
+  else:                                                     #Defining number of days
+    for w in range (500):                                                        #Replace 2 by number of swaps,i.e, 50.
+      two_numbers = random.sample(list_of_36,2)                                   
+      f=two_numbers[0]
+      g=two_numbers[0]
+      i=random.sample(Indices[f], 1)
+      j=random.sample(Indices[g], 1)
+      (Arrays[f][i[0][0], i[0][1]], Arrays[g][j[0][0], j[0][1]]) = (Arrays[g][j[0][0], j[0][1]], Arrays[f][i[0][0], i[0][1]] )   #Swapping for Inter-State
+
+  for m in range(29):
+    for n in Indices[m]:                                                        #Hospital Curing people
+      if( 1 <= Arrays[m][n[0], n[1]] <= 7 or 9 <= Arrays[m][n[0], n[1]] <= 12 ):                                      
+        Arrays[m][n[0], n[1]] =  Arrays[m][n[0], n[1]] - 1
+
+  for v in range(17):                                                            #Choosing the 120 people, beginning with random 120 entries for state
+    u=randint(0, 28)
+    Hospital_guys.append(u)
+                                       
+  for k in Hospital_guys:                                                       #Making 7 different types of people in hospital
+    for l in Indices[k]:                                                        #Such that they are cured after 7 days
+      if( Arrays[k][l[0], l[1]] == 8 or Arrays[k][l[0], l[1] == -1]  ):            # Consider only 1's
+        Infected_Here.append(l)
+    if(len(Infected_Here) >= 1):
+      Arrays[k][Infected_Here[0][0], Infected_Here[0][1]] = 7
+    Infected_Here.clear()
+  Hospital_guys.clear()
+   
+  for o in range(29):                                                           
+    for z in Indices[o]:                                                        #Extracting those with entries 1
+      if ((Arrays[o][z[0], z[1]] == -1) or (8 <= Arrays[o][z[0], z[1]] <=12 )): #Considering only infected un-hospitalized
+        Extracted_Indices.append(z)
+
+    for y in Extracted_Indices:                                                 #Affecting neighbours if they are unaffected
+      q=random.random()
+      if(q <= probability[o]):
+        if(Arrays[o][(y[0]+1)%No_of_Rows[o],(y[1]+1)%No_of_Columns[o]]==0):
+          Arrays[o][(y[0]+1)%No_of_Rows[o],(y[1]+1)%No_of_Columns[o]]=12
+        if(Arrays[o][ y[0],(y[1]+1)%No_of_Columns[o]]==0):
+          Arrays[o][ y[0],(y[1]+1)%No_of_Columns[o]]=12
+        if(Arrays[o][(y[0]+1)%No_of_Rows[o], y[1]]==0):
+          Arrays[o][(y[0]+1)%No_of_Rows[o], y[1]]=12
+        if(Arrays[o][abs(y[0]-1),abs(y[1]-1)]==0):
+          Arrays[o][abs(y[0]-1),abs(y[1]-1)]=12                                 #Making next door neighbours 1
+        if(Arrays[o][y[0],abs(y[1]-1)]==0):
+          Arrays[o][y[0],abs(y[1]-1)]=12
+        if(Arrays[o][abs(y[0]-1),y[1]]==0):
+          Arrays[o][abs(y[0]-1),y[1]]=12
+        if(Arrays[o][abs(y[0]-1),(y[1]+1)%No_of_Columns[o]]==0):
+          Arrays[o][abs(y[0]-1),y[1]]=12
+        if(Arrays[o][(y[0]+1)%No_of_Rows[o],abs(y[1]-1)]==0):
+          Arrays[o][(y[0]+1)%No_of_Rows[o],abs(y[1]-1)]=12
+    Extracted_Indices.clear()
+
+  for A in range(29):                                                           
+    for B in Indices[A]:                                                        #Making Entries of Dead people -1
+      if ((Arrays[A][B[0], B[1]] == -1) or (Arrays[A][B[0], B[1]] == 8) ): 
+        C=random.random()  
+        if (C<=0.05):
+          Arrays[A][B[0], B[1]] = -2
+
+  Unaffected_Patients=0
+  for r in range(29):
+    for s in Indices[r]:                                                        #Counting number of sick patients everyday by taking those not equal to 0
+      if((Arrays[r][s[0], s[1]] == 0) or (9 <= Arrays[r][s[0], s[1]] <= 12)  ):
+        Unaffected_Patients += 1
+
+  Dead_Patients = 0
+  for D in range(29):                                                           
+    for E in Indices[D]:                                                        #Counting Deaths
+      if (Arrays[D][E[0], E[1]] == -2): 
+        Dead_Patients += 1
+
+  Sick_Patients = 0
+  for H in range(29):                                                           
+    for I in Indices[H]:                                                        #Counting Deaths
+      if ((Arrays[H][I[0], I[1]] == -1) or (1 <= Arrays[H][I[0], I[1]] <= 8) ): 
+        Sick_Patients += 1
+ 
+
+  No_of_Iterations+=1      
+  print("Number of Current Sick guys after", No_of_Iterations," iterations is",Sick_Patients)                         #Printing current situation.
+  print("Number of Dead Guys after",No_of_Iterations, "iterations is", Dead_Patients)
+  print("Number of Unaffected Patients is:", Unaffected_Patients)
+  print("Total:", Unaffected_Patients + Dead_Patients + Sick_Patients)
